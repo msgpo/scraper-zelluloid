@@ -308,7 +308,7 @@ public class ZelluloidMetadataProvider implements IMovieMetadataProvider, IMovie
           if (imdb.isEmpty()) {
             imdb = "tt" + StrgUtils.substr(el.get(0).attr("href"), "\\?(\\d+)");
           }
-          md.setId(MediaMetadata.IMDBID, imdb);
+          md.setId(MediaMetadata.IMDB, imdb);
         }
       }
     }
