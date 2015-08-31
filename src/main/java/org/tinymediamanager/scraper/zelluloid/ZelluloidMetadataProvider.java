@@ -145,8 +145,7 @@ public class ZelluloidMetadataProvider implements IMovieMetadataProvider, IMovie
         try {
           SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
           Date d = sdf.parse(el.get(0).text());
-          sdf = new SimpleDateFormat("yyyy-MM-dd");
-          md.storeMetadata(MediaMetadata.RELEASE_DATE, sdf.format(d));
+          md.storeMetadata(MediaMetadata.RELEASE_DATE, d);
         }
         catch (Exception e) {
           LOGGER.warn("cannot parse cinema release date: " + el.get(0).text());
