@@ -43,9 +43,9 @@ import org.tinymediamanager.scraper.MediaSearchOptions;
 import org.tinymediamanager.scraper.MediaSearchResult;
 import org.tinymediamanager.scraper.MediaTrailer;
 import org.tinymediamanager.scraper.MediaType;
-import org.tinymediamanager.scraper.MetadataUtil;
 import org.tinymediamanager.scraper.UnsupportedMediaTypeException;
 import org.tinymediamanager.scraper.http.CachedUrl;
+import org.tinymediamanager.scraper.util.MetadataUtil;
 import org.tinymediamanager.scraper.util.StrgUtils;
 import org.tinymediamanager.scraper.http.Url;
 
@@ -419,8 +419,6 @@ public class ZelluloidMetadataProvider implements IMovieMetadataProvider, IMovie
           sr.setScore(MetadataUtil.calculateScore(searchTerm, sr.getTitle()));
         }
 
-        // populate extra args
-        MetadataUtil.copySearchQueryToSearchResult(options, sr);
         resultList.add(sr);
       }
       catch (Exception e) {
