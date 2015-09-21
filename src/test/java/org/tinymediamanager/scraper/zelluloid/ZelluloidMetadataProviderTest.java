@@ -66,7 +66,7 @@ public class ZelluloidMetadataProviderTest {
     try {
       mp = new ZelluloidMetadataProvider();
       MediaSearchOptions op = new MediaSearchOptions(MediaType.MOVIE);
-      op.set(MediaSearchOptions.SearchParam.TITLE, "Die Bourne Identität");
+      op.set(MediaSearchOptions.SearchParam.QUERY, "Die Bourne Identität");
       List<MediaSearchResult> results = mp.search(op);
 
       assertThat(results).isNotNull().isNotEmpty();
@@ -84,7 +84,7 @@ public class ZelluloidMetadataProviderTest {
     try {
       mp = new ZelluloidMetadataProvider();
       MediaSearchOptions op = new MediaSearchOptions(MediaType.MOVIE);
-      op.set(MediaSearchOptions.SearchParam.TITLE, "12 Monkeys");
+      op.set(MediaSearchOptions.SearchParam.QUERY, "12 Monkeys");
       List<MediaSearchResult> results = mp.search(op);
 
       assertThat(results).isNotNull().isNotEmpty();
@@ -103,7 +103,7 @@ public class ZelluloidMetadataProviderTest {
     try {
       mp = new ZelluloidMetadataProvider();
       MediaSearchOptions op = new MediaSearchOptions(MediaType.MOVIE);
-      op.set(MediaSearchOptions.SearchParam.TITLE, "V wie Vendetta");
+      op.set(MediaSearchOptions.SearchParam.QUERY, "V wie Vendetta");
       List<MediaSearchResult> results = mp.search(op);
 
       assertThat(results).isNotNull().isNotEmpty();

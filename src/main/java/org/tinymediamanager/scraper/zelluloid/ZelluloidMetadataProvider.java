@@ -337,12 +337,7 @@ public class ZelluloidMetadataProvider implements IMovieMetadataProvider, IMovie
     if (StringUtils.isNotEmpty(options.get(MediaSearchOptions.SearchParam.QUERY))) {
       searchTerm = options.get(MediaSearchOptions.SearchParam.QUERY);
       searchUrl = BASE_URL + "/suche/index.php3?qstring=" + URLEncoder.encode(searchTerm, "UTF-8");
-      LOGGER.debug("search for everything: " + searchTerm);
-    }
-    else if (StringUtils.isNotEmpty(options.get(MediaSearchOptions.SearchParam.TITLE))) {
-      searchTerm = options.get(MediaSearchOptions.SearchParam.TITLE);
-      searchUrl = BASE_URL + "/suche/index.php3?qstring=" + URLEncoder.encode(searchTerm, "UTF-8");
-      LOGGER.debug("search with title: " + searchTerm);
+      LOGGER.debug("search for : " + searchTerm);
     }
     else {
       LOGGER.debug("empty searchString");
