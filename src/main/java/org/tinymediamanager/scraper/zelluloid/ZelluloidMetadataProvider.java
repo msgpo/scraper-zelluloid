@@ -39,13 +39,11 @@ import org.tinymediamanager.scraper.MediaProviderInfo;
 import org.tinymediamanager.scraper.MediaScrapeOptions;
 import org.tinymediamanager.scraper.MediaSearchOptions;
 import org.tinymediamanager.scraper.MediaSearchResult;
-import org.tinymediamanager.scraper.MediaTrailer;
 import org.tinymediamanager.scraper.MediaType;
 import org.tinymediamanager.scraper.UnsupportedMediaTypeException;
 import org.tinymediamanager.scraper.http.CachedUrl;
 import org.tinymediamanager.scraper.http.Url;
 import org.tinymediamanager.scraper.mediaprovider.IMovieMetadataProvider;
-import org.tinymediamanager.scraper.mediaprovider.IMovieTrailerProvider;
 import org.tinymediamanager.scraper.util.MetadataUtil;
 import org.tinymediamanager.scraper.util.StrgUtils;
 
@@ -57,7 +55,7 @@ import net.xeoh.plugins.base.annotations.PluginImplementation;
  * @author Myron Boyle (myron0815@gmx.net)
  */
 @PluginImplementation
-public class ZelluloidMetadataProvider implements IMovieMetadataProvider, IMovieTrailerProvider {
+public class ZelluloidMetadataProvider implements IMovieMetadataProvider { // , IMovieTrailerProvider {
   private static final Logger      LOGGER        = LoggerFactory.getLogger(ZelluloidMetadataProvider.class);
   private static final String      BASE_URL      = "http://www.zelluloid.de";
   private static final String      PAGE_ENCODING = "ISO-8859-1";
@@ -447,11 +445,11 @@ public class ZelluloidMetadataProvider implements IMovieMetadataProvider, IMovie
     return resultList;
   }
 
-  @Override
-  public List<MediaTrailer> getTrailers(MediaScrapeOptions options) throws Exception {
-    // http://www.zelluloid.de/filme/trailer.php3?id=7614
-    return new ArrayList<MediaTrailer>(0);
-  }
+  // @Override
+  // public List<MediaTrailer> getTrailers(MediaScrapeOptions options) throws Exception {
+  // // http://www.zelluloid.de/filme/trailer.php3?id=7614
+  // return new ArrayList<MediaTrailer>(0);
+  // }
 
   private MediaGenres getTmmGenre(String genre) {
     MediaGenres g = null;
