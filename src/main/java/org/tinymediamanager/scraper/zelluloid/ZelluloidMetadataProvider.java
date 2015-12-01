@@ -32,8 +32,6 @@ import org.jsoup.select.Elements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.tinymediamanager.scraper.Certification;
-import org.tinymediamanager.scraper.mediaprovider.IMovieMetadataProvider;
-import org.tinymediamanager.scraper.mediaprovider.IMovieTrailerProvider;
 import org.tinymediamanager.scraper.MediaCastMember;
 import org.tinymediamanager.scraper.MediaGenres;
 import org.tinymediamanager.scraper.MediaMetadata;
@@ -45,9 +43,11 @@ import org.tinymediamanager.scraper.MediaTrailer;
 import org.tinymediamanager.scraper.MediaType;
 import org.tinymediamanager.scraper.UnsupportedMediaTypeException;
 import org.tinymediamanager.scraper.http.CachedUrl;
+import org.tinymediamanager.scraper.http.Url;
+import org.tinymediamanager.scraper.mediaprovider.IMovieMetadataProvider;
+import org.tinymediamanager.scraper.mediaprovider.IMovieTrailerProvider;
 import org.tinymediamanager.scraper.util.MetadataUtil;
 import org.tinymediamanager.scraper.util.StrgUtils;
-import org.tinymediamanager.scraper.http.Url;
 
 import net.xeoh.plugins.base.annotations.PluginImplementation;
 
@@ -58,11 +58,11 @@ import net.xeoh.plugins.base.annotations.PluginImplementation;
  */
 @PluginImplementation
 public class ZelluloidMetadataProvider implements IMovieMetadataProvider, IMovieTrailerProvider {
-  private static final Logger LOGGER        = LoggerFactory.getLogger(ZelluloidMetadataProvider.class);
-  private static final String BASE_URL      = "http://www.zelluloid.de";
-  private static final String PAGE_ENCODING = "ISO-8859-1";
+  private static final Logger      LOGGER        = LoggerFactory.getLogger(ZelluloidMetadataProvider.class);
+  private static final String      BASE_URL      = "http://www.zelluloid.de";
+  private static final String      PAGE_ENCODING = "ISO-8859-1";
 
-  private static MediaProviderInfo providerInfo = createMediaProviderInfo();
+  private static MediaProviderInfo providerInfo  = createMediaProviderInfo();
 
   private static MediaProviderInfo createMediaProviderInfo() {
     MediaProviderInfo providerInfo = new MediaProviderInfo("zelluloid", "zelluloid.de",
@@ -242,7 +242,7 @@ public class ZelluloidMetadataProvider implements IMovieMetadataProvider, IMovie
               // actors
               if (el.size() == 2) {
                 String role = "" + el.get(0).text().trim();
-                // text() decodes &nbsp; to \u00a0                
+                // text() decodes &nbsp; to \u00a0
                 if (role.equals("\u00a0") || StringUtils.isBlank(role)) {
                   continue;
                 }
@@ -450,7 +450,7 @@ public class ZelluloidMetadataProvider implements IMovieMetadataProvider, IMovie
   @Override
   public List<MediaTrailer> getTrailers(MediaScrapeOptions options) throws Exception {
     // http://www.zelluloid.de/filme/trailer.php3?id=7614
-    return null;
+    return new ArrayList<MediaTrailer>(0);
   }
 
   private MediaGenres getTmmGenre(String genre) {
