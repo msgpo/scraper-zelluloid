@@ -66,7 +66,7 @@ public class ZelluloidMetadataProvider implements IMovieMetadataProvider { // , 
     MediaProviderInfo providerInfo = new MediaProviderInfo("zelluloid", "zelluloid.de",
         "<html><h3>Zelluloid.de</h3><br />Scraper for the german site zelluloid.de which is able to scrape movie metadata<br /><br />Available languages: german</html>",
         ZelluloidMetadataProvider.class.getResource("/zelluloid_de.png"));
-
+    providerInfo.setVersion(ZelluloidMetadataProvider.class);
     return providerInfo;
   }
 
