@@ -355,7 +355,7 @@ public class ZelluloidMetadataProvider implements IMovieMetadataProvider { // , 
       LOGGER.error("failed to search for " + searchTerm + ": " + e.getMessage());
     }
 
-    if (doc == null) {
+    if (doc == null || doc.text().contains("Interner Fehler")) {
       return resultList;
     }
 
