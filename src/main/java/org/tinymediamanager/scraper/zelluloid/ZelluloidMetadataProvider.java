@@ -100,14 +100,17 @@ public class ZelluloidMetadataProvider implements IMovieMetadataProvider { // , 
       }
     }
 
-    // we can not scrape without zelluloid id
+    // we can not scrape without zelluloid id and url
+    if (StringUtils.isBlank(id) && StringUtils.isBlank(options.getResult().getUrl())) {
+      throw new Exception("cannot scrape without id and url");
+    }
+
+    String detailurl = BASE_URL + "/filme/index.php3?id=" + id;
     if (StringUtils.isBlank(id)) {
-      throw new Exception("cannot scrape without id");
+      detailurl = options.getResult().getUrl();
     }
 
     MediaMetadata md = new MediaMetadata(providerInfo.getId());
-
-    String detailurl = BASE_URL + "/filme/index.php3?id=" + id;
 
     Url url;
     try {
@@ -221,7 +224,7 @@ public class ZelluloidMetadataProvider implements IMovieMetadataProvider { // , 
             else if (tr.toString().contains("Crew")) {
               header = 2;
             }
-            else if (tr.toString().contains("Produktion")) {
+            else if (tr.toString().contains("Produktion")) { // company, not producers
               header = 3;
             }
             else if (tr.toString().contains("Verleih")) {
@@ -258,17 +261,20 @@ public class ZelluloidMetadataProvider implements IMovieMetadataProvider { // , 
                 String crewrole = el.get(0).html().trim();
                 mcm.setName(el.get(1).getElementsByTag("a").text());
                 if (crewrole.equals("&nbsp;")) {
-                  mcm.setPart(lastRole);
+                  crewrole = lastRole; // pop previous
                 }
                 else {
-                  mcm.setPart(crewrole);
-                  lastRole = crewrole;
+                  lastRole = crewrole; // push new
                 }
+                mcm.setPart(crewrole);
                 if (crewrole.equals("Regie")) {
                   mcm.setType(MediaCastMember.CastType.DIRECTOR);
                 }
                 else if (crewrole.equals("Drehbuch")) {
                   mcm.setType(MediaCastMember.CastType.WRITER);
+                }
+                else if (crewrole.equals("Produktion")) {
+                  mcm.setType(MediaCastMember.CastType.PRODUCER);
                 }
                 else {
                   mcm.setType(MediaCastMember.CastType.OTHER);
@@ -310,7 +316,7 @@ public class ZelluloidMetadataProvider implements IMovieMetadataProvider { // , 
       }
     }
     catch (Exception e) {
-      LOGGER.error("Error parsing " + options.getResult().getUrl());
+      LOGGER.error("Error parsing " + detailurl);
 
       throw e;
     }
@@ -326,7 +332,7 @@ public class ZelluloidMetadataProvider implements IMovieMetadataProvider { // , 
       throw new UnsupportedMediaTypeException(options.getMediaType());
     }
 
-    List<MediaSearchResult> resultList = new ArrayList<MediaSearchResult>();
+    ArrayList<MediaSearchResult> resultList = new ArrayList<MediaSearchResult>();
     String searchUrl = "";
     String searchTerm = "";
     String imdb = "";
@@ -356,6 +362,17 @@ public class ZelluloidMetadataProvider implements IMovieMetadataProvider { // , 
     }
 
     if (doc == null || doc.text().contains("Interner Fehler")) {
+      // FIXME: we are using the one which comes with zelluloid - NOT the global one
+      SearchTitleWithGoogle gs = new SearchTitleWithGoogle();
+      List<MediaSearchResult> gr = gs.search("zelluloid.de", this.getProviderInfo(), options);
+      for (MediaSearchResult msr : gr) {
+        // filter google results - only movie links
+        if (msr.getUrl().contains("/filme/index.php3")) {
+          String id = StrgUtils.substr(msr.getUrl(), "id=(.*)");
+          msr.setId(id);
+          resultList.add(msr);
+        }
+      }
       return resultList;
     }
 
