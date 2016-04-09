@@ -21,15 +21,15 @@ import java.util.List;
 
 import org.junit.Assert;
 import org.junit.Test;
-import org.tinymediamanager.scraper.Certification;
-import org.tinymediamanager.scraper.MediaCastMember;
-import org.tinymediamanager.scraper.MediaCastMember.CastType;
-import org.tinymediamanager.scraper.MediaGenres;
 import org.tinymediamanager.scraper.MediaMetadata;
 import org.tinymediamanager.scraper.MediaScrapeOptions;
 import org.tinymediamanager.scraper.MediaSearchOptions;
 import org.tinymediamanager.scraper.MediaSearchResult;
-import org.tinymediamanager.scraper.MediaType;
+import org.tinymediamanager.scraper.entities.Certification;
+import org.tinymediamanager.scraper.entities.MediaCastMember;
+import org.tinymediamanager.scraper.entities.MediaGenres;
+import org.tinymediamanager.scraper.entities.MediaType;
+import org.tinymediamanager.scraper.entities.MediaCastMember.CastType;
 
 public class ZelluloidMetadataProviderTest {
 
@@ -105,18 +105,18 @@ public class ZelluloidMetadataProviderTest {
       MediaMetadata md = mp.getMetadata(scop);
 
       assertThat(md).isNotNull();
-      assertThat(md.getStringValue(MediaMetadata.TITLE)).isEqualTo("Twelve Monkeys");
-      assertThat(md.getStringValue(MediaMetadata.YEAR)).isEqualTo("1995");
-      assertThat(md.getStringValue(MediaMetadata.PLOT)).startsWith("Terry Gilliam, einer der Väter der britischen");
-      assertThat(md.getStringValue(MediaMetadata.ORIGINAL_TITLE)).isEqualTo("Twelve Monkeys");
-      assertThat(md.getIntegerValue(MediaMetadata.RUNTIME)).isEqualTo(130);
-      assertThat(md.getStringValue(MediaMetadata.PRODUCTION_COMPANY)).isEqualTo("Universal");
+      assertThat(md.getTitle()).isEqualTo("Twelve Monkeys");
+      assertThat(md.getYear()).isEqualTo("1995");
+      assertThat(md.getPlot()).startsWith("Terry Gilliam, einer der Väter der britischen");
+      assertThat(md.getOriginalTitle()).isEqualTo("Twelve Monkeys");
+      assertThat(md.getRuntime()).isEqualTo(130);
+      assertThat(md.getProductionCompanies()).containsOnly("Universal");
       assertThat(md.getGenres()).isNotNull().isNotEmpty();
       assertThat(md.getGenres()).contains(MediaGenres.THRILLER, MediaGenres.SCIENCE_FICTION);
       assertThat(md.getCertifications()).isNotNull().isNotEmpty();
       assertThat(md.getCertifications()).contains(Certification.DE_FSK16);
 
-      assertThat(md.getDoubleValue(MediaMetadata.RATING)).isGreaterThan(0);
+      assertThat(md.getRating()).isGreaterThan(0);
       assertThat(md.getCastMembers(CastType.ACTOR)).isNotNull().isNotEmpty();
       assertThat(md.getCastMembers(CastType.ACTOR).size()).isEqualTo(22);
 

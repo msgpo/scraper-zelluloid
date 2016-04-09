@@ -31,16 +31,17 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.tinymediamanager.scraper.Certification;
-import org.tinymediamanager.scraper.MediaCastMember;
-import org.tinymediamanager.scraper.MediaGenres;
 import org.tinymediamanager.scraper.MediaMetadata;
 import org.tinymediamanager.scraper.MediaProviderInfo;
 import org.tinymediamanager.scraper.MediaScrapeOptions;
 import org.tinymediamanager.scraper.MediaSearchOptions;
 import org.tinymediamanager.scraper.MediaSearchResult;
-import org.tinymediamanager.scraper.MediaType;
 import org.tinymediamanager.scraper.UnsupportedMediaTypeException;
+import org.tinymediamanager.scraper.entities.Certification;
+import org.tinymediamanager.scraper.entities.MediaArtwork;
+import org.tinymediamanager.scraper.entities.MediaCastMember;
+import org.tinymediamanager.scraper.entities.MediaGenres;
+import org.tinymediamanager.scraper.entities.MediaType;
 import org.tinymediamanager.scraper.http.CachedUrl;
 import org.tinymediamanager.scraper.http.Url;
 import org.tinymediamanager.scraper.mediaprovider.IMovieMetadataProvider;
@@ -121,23 +122,32 @@ public class ZelluloidMetadataProvider implements IMovieMetadataProvider { // , 
 
       // parse title
       String title = doc.getElementsByAttributeValue("property", "og:title").attr("content").trim();
-      md.storeMetadata(MediaMetadata.TITLE, title);
+      md.setTitle(title);
 
       // parse plot
       String plot = doc.getElementsByAttributeValue("class", "bigtext").text();
-      md.storeMetadata(MediaMetadata.PLOT, plot);
-      md.storeMetadata(MediaMetadata.TAGLINE, plot.length() > 150 ? plot.substring(0, 150) : plot);
+      md.setPlot(plot);
+      md.setTagline(plot.length() > 150 ? plot.substring(0, 150) : plot);
 
       // parse poster
       Elements el = doc.getElementsByAttributeValueStarting("src", "/images/poster");
       if (el.size() == 1) {
-        md.storeMetadata(MediaMetadata.POSTER_URL, BASE_URL + el.get(0).attr("src"));
+        // Poster
+        MediaArtwork ma = new MediaArtwork(providerInfo.getId(), MediaArtwork.MediaArtworkType.POSTER);
+        ma.setPreviewUrl(BASE_URL + el.get(0).attr("src"));
+        ma.setDefaultUrl(BASE_URL + el.get(0).attr("src"));
+        ma.setLanguage(options.getLanguage().name());
+        md.addMediaArt(ma);
       }
 
       // parse year
       el = doc.getElementsByAttributeValueContaining("href", "az.php3?j=");
       if (el.size() == 1) {
-        md.storeMetadata(MediaMetadata.YEAR, el.get(0).text());
+        try {
+          md.setYear(Integer.parseInt(el.get(0).text()));
+        }
+        catch (Exception ignored) {
+        }
       }
 
       // parse cinema release
@@ -146,7 +156,7 @@ public class ZelluloidMetadataProvider implements IMovieMetadataProvider { // , 
         try {
           SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
           Date d = sdf.parse(el.get(0).text());
-          md.storeMetadata(MediaMetadata.RELEASE_DATE, d);
+          md.setReleaseDate(d);
         }
         catch (Exception e) {
           LOGGER.warn("cannot parse cinema release date: " + el.get(0).text());
@@ -154,17 +164,17 @@ public class ZelluloidMetadataProvider implements IMovieMetadataProvider { // , 
       }
 
       // parse original title
-      md.storeMetadata(MediaMetadata.ORIGINAL_TITLE, StrgUtils.substr(doc.toString(), "Originaltitel: (.*?)\\<"));
+      md.setOriginalTitle(StrgUtils.substr(doc.toString(), "Originaltitel: (.*?)\\<"));
 
-      if (StringUtils.isEmpty(md.getStringValue(MediaMetadata.ORIGINAL_TITLE))) {
-        md.storeMetadata(MediaMetadata.ORIGINAL_TITLE, md.getStringValue(MediaMetadata.TITLE));
+      if (StringUtils.isEmpty(md.getOriginalTitle())) {
+        md.setOriginalTitle(md.getTitle());
       }
 
       // parse runtime
       String rt = (StrgUtils.substr(doc.toString(), "ca.&nbsp;(.*?)&nbsp;min"));
       if (!rt.isEmpty()) {
         try {
-          md.storeMetadata(MediaMetadata.RUNTIME, Integer.valueOf(rt));
+          md.setRuntime(Integer.valueOf(rt));
         }
         catch (Exception e2) {
           LOGGER.warn("cannot convert runtime: " + rt);
@@ -192,7 +202,7 @@ public class ZelluloidMetadataProvider implements IMovieMetadataProvider { // , 
         // <div>87%</div>
         String r = e.getElementsByTag("div").text().replace("%", "");
         try {
-          md.storeMetadata(MediaMetadata.RATING, Double.valueOf(r) / 10); // only 0-10
+          md.setRating(Float.valueOf(r) / 10); // only 0-10
         }
         catch (Exception e2) {
           LOGGER.warn("cannot convert rating: " + r);
@@ -285,7 +295,7 @@ public class ZelluloidMetadataProvider implements IMovieMetadataProvider { // , 
             }
             else if (header == 3) {
               // production
-              md.storeMetadata(MediaMetadata.PRODUCTION_COMPANY, el.get(0).text());
+              md.addProductionCompany(el.get(0).text());
             }
           }
         }
@@ -414,7 +424,11 @@ public class ZelluloidMetadataProvider implements IMovieMetadataProvider { // , 
         LOGGER.debug("found movie " + sr.getTitle());
         sr.setOriginalTitle(a.getElementsByTag("span").text());
 
-        sr.setYear(StrgUtils.substr(tr.getElementsByTag("nobr").text(), ".*(\\d{4}).*")); // any 4 digit
+        try {
+          sr.setYear(Integer.parseInt(StrgUtils.substr(tr.getElementsByTag("nobr").text(), ".*(\\d{4}).*"))); // any 4 digit
+        }
+        catch (Exception ignored) {
+        }
         sr.setMediaType(MediaType.MOVIE);
         sr.setUrl(BASE_URL + "/filme/index.php3?id=" + id);
         // sr.setPosterUrl(BASE_URL + "/images" + StrgUtils.substr(a.toString(),
@@ -450,7 +464,11 @@ public class ZelluloidMetadataProvider implements IMovieMetadataProvider { // , 
         msr.setTitle(StrgUtils.substr(doc.getElementsByTag("title").text(), "(.*?)\\|").trim());
         el = doc.getElementsByAttributeValueContaining("href", "az.php3?j=");
         if (el.size() == 1) {
-          msr.setYear(el.get(0).text());
+          try {
+            msr.setYear(Integer.parseInt(el.get(0).text()));
+          }
+          catch (Exception ignored) {
+          }
         }
         resultList.add(msr);
       }
