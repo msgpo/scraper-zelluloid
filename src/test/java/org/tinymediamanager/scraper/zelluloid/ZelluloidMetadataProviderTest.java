@@ -15,7 +15,8 @@
  */
 package org.tinymediamanager.scraper.zelluloid;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.fail;
 
 import java.util.List;
 
@@ -27,9 +28,9 @@ import org.tinymediamanager.scraper.MediaSearchOptions;
 import org.tinymediamanager.scraper.MediaSearchResult;
 import org.tinymediamanager.scraper.entities.Certification;
 import org.tinymediamanager.scraper.entities.MediaCastMember;
+import org.tinymediamanager.scraper.entities.MediaCastMember.CastType;
 import org.tinymediamanager.scraper.entities.MediaGenres;
 import org.tinymediamanager.scraper.entities.MediaType;
-import org.tinymediamanager.scraper.entities.MediaCastMember.CastType;
 
 public class ZelluloidMetadataProviderTest {
 
@@ -40,15 +41,14 @@ public class ZelluloidMetadataProviderTest {
     // Die Bourne Identität - 2002 - ID 1957
     try {
       mp = new ZelluloidMetadataProvider();
-      MediaSearchOptions op = new MediaSearchOptions(MediaType.MOVIE);
-      op.set(MediaSearchOptions.SearchParam.QUERY, "Die Bourne Identität");
+      MediaSearchOptions op = new MediaSearchOptions(MediaType.MOVIE, "Die Bourne Identität");
       List<MediaSearchResult> results = mp.search(op);
 
       assertThat(results).isNotNull().isNotEmpty();
-      assertThat(results.size()).isGreaterThanOrEqualTo(3);
+      assertThat(results.size()).isGreaterThanOrEqualTo(2);
       assertThat(results.get(0).getId()).isEqualTo("1957");
       assertThat(results.get(0).getTitle()).isEqualTo("Die Bourne Identität");
-      assertThat(results.get(0).getYear()).isEqualTo("2002");
+      assertThat(results.get(0).getYear()).isEqualTo(2002);
     }
     catch (Exception e) {
       e.printStackTrace();
@@ -58,15 +58,14 @@ public class ZelluloidMetadataProviderTest {
     // 12 Monkeys - 1995 - ID 886
     try {
       mp = new ZelluloidMetadataProvider();
-      MediaSearchOptions op = new MediaSearchOptions(MediaType.MOVIE);
-      op.set(MediaSearchOptions.SearchParam.QUERY, "12 Monkeys");
+      MediaSearchOptions op = new MediaSearchOptions(MediaType.MOVIE, "12 Monkeys");
       List<MediaSearchResult> results = mp.search(op);
 
       assertThat(results).isNotNull().isNotEmpty();
       assertThat(results.size()).isGreaterThanOrEqualTo(1);
       assertThat(results.get(0).getId()).isEqualTo("886");
       assertThat(results.get(0).getTitle()).isEqualTo("Twelve Monkeys");
-      assertThat(results.get(0).getYear()).isEqualTo("1995");
+      assertThat(results.get(0).getYear()).isEqualTo(1995);
     }
     catch (Exception e) {
       e.printStackTrace();
@@ -77,15 +76,14 @@ public class ZelluloidMetadataProviderTest {
     // V wie Vendetta - 2005 - ID 5656
     try {
       mp = new ZelluloidMetadataProvider();
-      MediaSearchOptions op = new MediaSearchOptions(MediaType.MOVIE);
-      op.set(MediaSearchOptions.SearchParam.QUERY, "V wie Vendetta");
+      MediaSearchOptions op = new MediaSearchOptions(MediaType.MOVIE, "V wie Vendetta");
       List<MediaSearchResult> results = mp.search(op);
 
       assertThat(results).isNotNull().isNotEmpty();
       assertThat(results.size()).isGreaterThanOrEqualTo(1);
       assertThat(results.get(0).getId()).isEqualTo("5656");
       assertThat(results.get(0).getTitle()).isEqualTo("V wie Vendetta");
-      assertThat(results.get(0).getYear()).isEqualTo("2005");
+      assertThat(results.get(0).getYear()).isEqualTo(2005);
     }
     catch (Exception e) {
       e.printStackTrace();
@@ -106,7 +104,7 @@ public class ZelluloidMetadataProviderTest {
 
       assertThat(md).isNotNull();
       assertThat(md.getTitle()).isEqualTo("Twelve Monkeys");
-      assertThat(md.getYear()).isEqualTo("1995");
+      assertThat(md.getYear()).isEqualTo(1995);
       assertThat(md.getPlot()).startsWith("Terry Gilliam, einer der Väter der britischen");
       assertThat(md.getOriginalTitle()).isEqualTo("Twelve Monkeys");
       assertThat(md.getRuntime()).isEqualTo(130);

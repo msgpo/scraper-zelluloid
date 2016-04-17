@@ -24,6 +24,8 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
+import net.xeoh.plugins.base.annotations.PluginImplementation;
+
 import org.apache.commons.lang3.StringUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -47,8 +49,6 @@ import org.tinymediamanager.scraper.http.Url;
 import org.tinymediamanager.scraper.mediaprovider.IMovieMetadataProvider;
 import org.tinymediamanager.scraper.util.MetadataUtil;
 import org.tinymediamanager.scraper.util.StrgUtils;
-
-import net.xeoh.plugins.base.annotations.PluginImplementation;
 
 /**
  * The Class ZelluloidMetadataProvider. A meta data provider for the site zelluloid.de
@@ -348,8 +348,8 @@ public class ZelluloidMetadataProvider implements IMovieMetadataProvider { // , 
     String imdb = "";
 
     // only title search
-    if (StringUtils.isNotEmpty(options.get(MediaSearchOptions.SearchParam.QUERY))) {
-      searchTerm = options.get(MediaSearchOptions.SearchParam.QUERY);
+    if (StringUtils.isNotEmpty(options.getQuery())) {
+      searchTerm = options.getQuery();
       searchUrl = BASE_URL + "/suche/index.php3?qstring=" + URLEncoder.encode(searchTerm, "UTF-8");
       LOGGER.debug("search for : " + searchTerm);
     }
