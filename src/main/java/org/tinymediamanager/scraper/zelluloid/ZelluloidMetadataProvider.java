@@ -410,7 +410,7 @@ public class ZelluloidMetadataProvider implements IMovieMetadataProvider { // , 
       try {
         Element a = as.first();
         String id = StrgUtils.substr(a.attr("href"), "-movie-(.*?)-");
-        MediaSearchResult sr = new MediaSearchResult(providerInfo.getId());
+        MediaSearchResult sr = new MediaSearchResult(providerInfo.getId(), options.getMediaType());
         sr.setId(id);
 
         if (StringUtils.isEmpty(sr.getTitle())) {
@@ -429,7 +429,7 @@ public class ZelluloidMetadataProvider implements IMovieMetadataProvider { // , 
         }
         catch (Exception ignored) {
         }
-        sr.setMediaType(MediaType.MOVIE);
+
         sr.setUrl(BASE_URL + "/filme/index.php3?id=" + id);
         // sr.setPosterUrl(BASE_URL + "/images" + StrgUtils.substr(a.toString(),
         // "images(.*?)\\&quot"));
@@ -456,7 +456,7 @@ public class ZelluloidMetadataProvider implements IMovieMetadataProvider { // , 
     if (resultList.isEmpty()) {
       if (!doc.getElementsByTag("title").text().contains("Suche nach")) {
         // redirected to detail page
-        MediaSearchResult msr = new MediaSearchResult(providerInfo.getId());
+        MediaSearchResult msr = new MediaSearchResult(providerInfo.getId(), options.getMediaType());
         Elements el = doc.getElementsByAttributeValueStarting("href", "index.php3?id=");
         if (el.size() > 0) {
           msr.setId(StrgUtils.substr(el.get(0).attr("href"), "id=(\\d+)"));
