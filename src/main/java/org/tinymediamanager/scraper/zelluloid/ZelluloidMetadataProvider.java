@@ -24,8 +24,6 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
-import net.xeoh.plugins.base.annotations.PluginImplementation;
-
 import org.apache.commons.lang3.StringUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -49,6 +47,8 @@ import org.tinymediamanager.scraper.http.Url;
 import org.tinymediamanager.scraper.mediaprovider.IMovieMetadataProvider;
 import org.tinymediamanager.scraper.util.MetadataUtil;
 import org.tinymediamanager.scraper.util.StrgUtils;
+
+import net.xeoh.plugins.base.annotations.PluginImplementation;
 
 /**
  * The Class ZelluloidMetadataProvider. A meta data provider for the site zelluloid.de
@@ -136,7 +136,7 @@ public class ZelluloidMetadataProvider implements IMovieMetadataProvider { // , 
         MediaArtwork ma = new MediaArtwork(providerInfo.getId(), MediaArtwork.MediaArtworkType.POSTER);
         ma.setPreviewUrl(BASE_URL + el.get(0).attr("src"));
         ma.setDefaultUrl(BASE_URL + el.get(0).attr("src"));
-        ma.setLanguage(options.getLanguage().name());
+        ma.setLanguage(options.getLanguage().getLanguage());
         md.addMediaArt(ma);
       }
 
