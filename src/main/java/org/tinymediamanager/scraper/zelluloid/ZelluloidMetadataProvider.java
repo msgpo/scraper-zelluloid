@@ -277,17 +277,19 @@ public class ZelluloidMetadataProvider implements IMovieMetadataProvider { // , 
                   lastRole = crewrole; // push new
                 }
                 mcm.setPart(crewrole);
-                if (crewrole.equals("Regie")) {
-                  mcm.setType(MediaCastMember.CastType.DIRECTOR);
-                }
-                else if (crewrole.equals("Drehbuch")) {
-                  mcm.setType(MediaCastMember.CastType.WRITER);
-                }
-                else if (crewrole.equals("Produktion")) {
-                  mcm.setType(MediaCastMember.CastType.PRODUCER);
-                }
-                else {
-                  mcm.setType(MediaCastMember.CastType.OTHER);
+                switch (crewrole) {
+                  case "Regie":
+                    mcm.setType(MediaCastMember.CastType.DIRECTOR);
+                    break;
+                  case "Drehbuch":
+                    mcm.setType(MediaCastMember.CastType.WRITER);
+                    break;
+                  case "Produktion":
+                    mcm.setType(MediaCastMember.CastType.PRODUCER);
+                    break;
+                  default:
+                    mcm.setType(MediaCastMember.CastType.OTHER);
+                    break;
                 }
                 mcm.setId(StrgUtils.substr(el.get(1).getElementsByTag("a").attr("href"), "id=(\\d+)"));
                 md.addCastMember(mcm);
@@ -342,7 +344,7 @@ public class ZelluloidMetadataProvider implements IMovieMetadataProvider { // , 
       throw new UnsupportedMediaTypeException(options.getMediaType());
     }
 
-    ArrayList<MediaSearchResult> resultList = new ArrayList<MediaSearchResult>();
+    ArrayList<MediaSearchResult> resultList = new ArrayList<>();
     String searchUrl = "";
     String searchTerm = "";
     String imdb = "";
