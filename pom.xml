@@ -10,7 +10,7 @@
 
 	<groupId>org.tinymediamanager.plugins</groupId>
 	<artifactId>scraper-zelluloid</artifactId>
-	<version>1.5-SNAPSHOT</version>
+	<version>1.5</version>
 
 	<name>Zelluloid.de scraper</name>
 	<description>A scraper for Zelluloid.de</description>
@@ -20,7 +20,7 @@
 		<url>https://github.com/tinyMediaManager/${project.artifactId}</url>
 		<connection>scm:git:git@github.com:tinyMediaManager/${project.artifactId}.git</connection>
 		<developerConnection>scm:git:git@github.com:tinyMediaManager/${project.artifactId}.git</developerConnection>
-	  <tag>HEAD</tag>
+	  <tag>scraper-zelluloid-1.5</tag>
   </scm>
 
 	<dependencies>
