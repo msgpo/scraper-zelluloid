@@ -344,6 +344,11 @@ public class ZelluloidMetadataProvider implements IMovieMetadataProvider { // , 
       throw new UnsupportedMediaTypeException(options.getMediaType());
     }
 
+    int year = 0;
+    if (options.getYear() != 0) {
+      year = options.getYear();
+    }
+
     ArrayList<MediaSearchResult> resultList = new ArrayList<>();
     String searchUrl = "";
     String searchTerm = "";
@@ -442,7 +447,13 @@ public class ZelluloidMetadataProvider implements IMovieMetadataProvider { // , 
         }
         else {
           // compare score based on names
-          sr.setScore(MetadataUtil.calculateScore(searchTerm, sr.getTitle()));
+          float score = MetadataUtil.calculateScore(searchTerm, sr.getTitle());
+          if (yearDiffers(year, sr.getYear())) {
+            float diff = (float) Math.abs(year - sr.getYear()) / 100;
+            LOGGER.debug("parsed year does not match search result year - downgrading score by " + diff);
+            score -= diff;
+          }
+          sr.setScore(score);
         }
 
         resultList.add(sr);
@@ -480,6 +491,13 @@ public class ZelluloidMetadataProvider implements IMovieMetadataProvider { // , 
     Collections.sort(resultList);
     Collections.reverse(resultList);
     return resultList;
+  }
+
+  /**
+   * Is i1 != i2 (when >0)
+   */
+  private boolean yearDiffers(Integer i1, Integer i2) {
+    return i1 != null && i1 != 0 && i2 != null && i2 != 0 && i1 != i2;
   }
 
   // @Override
