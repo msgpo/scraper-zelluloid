@@ -30,6 +30,7 @@ import org.tinymediamanager.scraper.entities.Certification;
 import org.tinymediamanager.scraper.entities.MediaCastMember;
 import org.tinymediamanager.scraper.entities.MediaCastMember.CastType;
 import org.tinymediamanager.scraper.entities.MediaGenres;
+import org.tinymediamanager.scraper.entities.MediaRating;
 import org.tinymediamanager.scraper.entities.MediaType;
 
 public class ZelluloidMetadataProviderTest {
@@ -114,7 +115,11 @@ public class ZelluloidMetadataProviderTest {
       assertThat(md.getCertifications()).isNotNull().isNotEmpty();
       assertThat(md.getCertifications()).contains(Certification.DE_FSK16);
 
-      assertThat(md.getRating()).isGreaterThan(0);
+      assertThat(md.getRatings().size()).isEqualTo(1);
+      MediaRating mediaRating = md.getRatings().get(0);
+      assertThat(mediaRating.getRating()).isGreaterThan(0);
+      assertThat(mediaRating.getMaxValue()).isEqualTo(100);
+
       assertThat(md.getCastMembers(CastType.ACTOR)).isNotNull().isNotEmpty();
       assertThat(md.getCastMembers(CastType.ACTOR).size()).isEqualTo(22);
 

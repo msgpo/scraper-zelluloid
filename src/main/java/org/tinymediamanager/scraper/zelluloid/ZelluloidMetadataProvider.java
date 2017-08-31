@@ -41,6 +41,7 @@ import org.tinymediamanager.scraper.entities.Certification;
 import org.tinymediamanager.scraper.entities.MediaArtwork;
 import org.tinymediamanager.scraper.entities.MediaCastMember;
 import org.tinymediamanager.scraper.entities.MediaGenres;
+import org.tinymediamanager.scraper.entities.MediaRating;
 import org.tinymediamanager.scraper.entities.MediaType;
 import org.tinymediamanager.scraper.http.CachedUrl;
 import org.tinymediamanager.scraper.http.Url;
@@ -202,7 +203,10 @@ public class ZelluloidMetadataProvider implements IMovieMetadataProvider { // , 
         // <div>87%</div>
         String r = e.getElementsByTag("div").text().replace("%", "");
         try {
-          md.setRating(Float.valueOf(r) / 10); // only 0-10
+          MediaRating rating = new MediaRating("zelluloid");
+          rating.setRating(Float.valueOf(r));
+          rating.setMaxValue(100);
+          md.addRating(rating);
         }
         catch (Exception e2) {
           LOGGER.warn("cannot convert rating: " + r);
