@@ -88,10 +88,7 @@ public class ZelluloidMetadataProvider implements IMovieMetadataProvider { // , 
       throw new UnsupportedMediaTypeException(options.getType());
     }
 
-    String id = "";
-    if (StringUtils.isNotBlank(options.getId(providerInfo.getId()))) {
-      id = options.getId(providerInfo.getId());
-    }
+    String id = options.getIdAsString(providerInfo.getId());
 
     if (StringUtils.isBlank(id) && options.getResult() != null) {
       if (StringUtils.isEmpty(options.getResult().getId())) {
