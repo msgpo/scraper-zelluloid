@@ -260,7 +260,7 @@ public class ZelluloidMetadataProvider implements IMovieMetadataProvider { // , 
                 }
                 mcm.setCharacter(role);
                 mcm.setName(el.get(1).getElementsByTag("a").text());
-                mcm.setId(StrgUtils.substr(el.get(1).getElementsByTag("a").attr("href"), "id=(\\d+)"));
+                mcm.setId(providerInfo.getId(), StrgUtils.substr(el.get(1).getElementsByTag("a").attr("href"), "id=(\\d+)"));
                 mcm.setType(MediaCastMember.CastType.ACTOR);
                 md.addCastMember(mcm);
                 // parsing actor pages would we too heavy here just for actor images..
@@ -292,7 +292,7 @@ public class ZelluloidMetadataProvider implements IMovieMetadataProvider { // , 
                     mcm.setType(MediaCastMember.CastType.OTHER);
                     break;
                 }
-                mcm.setId(StrgUtils.substr(el.get(1).getElementsByTag("a").attr("href"), "id=(\\d+)"));
+                mcm.setId(providerInfo.getId(), StrgUtils.substr(el.get(1).getElementsByTag("a").attr("href"), "id=(\\d+)"));
                 md.addCastMember(mcm);
               }
             }
